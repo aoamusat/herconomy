@@ -1,0 +1,1 @@
+web: gunicorn herconomy.wsgi
