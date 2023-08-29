@@ -10,6 +10,7 @@ django-environ = "*"
 redis = "*"
 psycopg2-binary = "*"
 requests = "*"
+faker = "*"
 
 [dev-packages]
 

@@ -72,6 +72,7 @@ class UserAdmin(BaseUserAdmin):
         "first_name",
         "last_name",
         "account_number",
+        "account_balance",
         "tier",
         "created_at",
     )

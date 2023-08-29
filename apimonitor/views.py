@@ -6,7 +6,11 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from apimonitor.auth import HerconomyAPIAuthentication
 from django.core.cache import cache
-from apimonitor.utils import call_webhook, resolve_account
+from apimonitor.utils import (
+    call_webhook,
+    resolve_account,
+    generate_transaction_reference,
+)
 from django.contrib.auth import get_user_model
 from apimonitor.models import Transaction
 from django.utils import timezone
@@ -53,6 +57,18 @@ class TransactionView(APIView):
                     status=status.HTTP_404_NOT_FOUND,
                 )
 
+            # Policy: Transaction amount exceeds the amount for a given tier.
+            sender_tier = str(sender.tier)
+            tier_amount = settings.ACCOUNT_LIMITS[sender_tier]
+
+            if payload.get("amount") > tier_amount:
+                webhook_payload = {
+                    "event": "account.tier.exceeded",
+                    "source_account": request.user.account_number,
+                    "amount": payload.get("amount"),
+                }
+                call_webhook(settings.WEBHOOK_URL, webhook_payload)
+
             # Policy: The transaction amount is greater than 5,000,000
             if payload.get("amount") > 5000000:
                 webhook_payload = {
@@ -92,8 +108,14 @@ class TransactionView(APIView):
 
             try:
                 tx = Transaction(
-                    amount=payload.get("amount"), sender=sender, to=recipient
+                    amount=payload.get("amount"),
+                    sender=sender,
+                    to=recipient,
+                    reference=generate_transaction_reference(),
                 )
+
+                recipient.account_balance += payload.get("amount")
+                recipient.save()
                 tx.save()
                 return JsonResponse(
                     data={

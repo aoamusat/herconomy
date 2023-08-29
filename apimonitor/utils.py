@@ -1,6 +1,7 @@
 import requests
 from typing import Any, Dict
 from django.contrib.auth import get_user_model
+import random
 
 User = get_user_model()
 
@@ -28,3 +29,9 @@ def resolve_account(account_number: str) -> User:
         return User.get_by_account_number(account_number)
     except User.DoesNotExist:
         return None
+
+
+def generate_transaction_reference():
+    reference_length = 32
+    reference = "".join(str(random.randint(0, 9)) for _ in range(reference_length))
+    return reference
