@@ -87,6 +87,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=10, unique=True, default="", editable=False
     )
     tier = models.CharField(max_length=10, choices=TIER_CHOICES, default="tier1")
+    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 
@@ -126,6 +127,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         prefix = "4"
         random_suffix = str(random.randint(1000000, 9999999))
         return prefix + random_suffix
+
+    @classmethod
+    def get_by_account_number(cls, account_number):
+        try:
+            return cls.objects.get(account_number=account_number)
+        except cls.DoesNotExist:
+            return None
 
 
 class Transaction(models.Model):
