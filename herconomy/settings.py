@@ -31,8 +31,6 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False if env("DEBUG") == "False" else True
 
-print(SECRET_KEY)
-
 ALLOWED_HOSTS = []
 
 

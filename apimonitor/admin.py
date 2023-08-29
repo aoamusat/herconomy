@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
 
-from apimonitor.models import User
+from apimonitor.models import User, Transaction
 
 
 class UserCreationForm(forms.ModelForm):
@@ -67,7 +67,7 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ("email", "first_name", "last_name", "is_admin")
+    list_display = ("email", "first_name", "last_name", "account_number", "tier")
     list_filter = ("is_admin",)
     fieldsets = (
         (None, {"fields": ("email", "password")}),
@@ -106,11 +106,17 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ("reference", "sender", "to", "amount", "created_at")
+    list_filter = ("sender", "to")
+    search_fields = ("sender__email", "to__email", "reference", "narration")
+    ordering = ("-created_at",)
+
+
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
+admin.site.register(Transaction, TransactionAdmin)
 
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
-
-# Register your models
