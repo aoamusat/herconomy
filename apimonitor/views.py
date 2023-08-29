@@ -124,6 +124,7 @@ class TransactionView(APIView):
                         "destination_name": f"{recipient.first_name} {recipient.last_name}",
                         "destination_account": recipient.account_number,
                         "tx_reference": tx.reference,
+                        "created_at": tx.created_at,
                     },
                     status=status.HTTP_200_OK,
                 )

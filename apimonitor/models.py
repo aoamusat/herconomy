@@ -143,7 +143,7 @@ class Transaction(models.Model):
     reference = models.CharField(
         max_length=32, unique=True, null=False, default=uuid.uuid4().hex[:32]
     )
-    narration = models.CharField(blank=True, null=True, max_length=256)
+    narration = models.CharField(blank=False, null=False, max_length=256)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
