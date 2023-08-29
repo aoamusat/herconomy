@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "apimonitor.apps.ApimonitorConfig",
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +60,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "herconomy.urls"
+
+AUTH_USER_MODEL = "apimonitor.User"
 
 TEMPLATES = [
     {
