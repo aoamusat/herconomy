@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "apimonitor.apps.ApimonitorConfig",
+    "seeder.apps.SeederConfig",
     "rest_framework",
 ]
 
